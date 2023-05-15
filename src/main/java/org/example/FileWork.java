@@ -80,74 +80,16 @@ public class FileWork {
     }
 
     public void clear(String secondFlag) throws IOException {
-        if (flag.equals("-f")) {
-            File temp = root;
-            root = root.getParentFile();
-            FileUtils.forceDelete(temp);
-            System.out.println("file is nulled and deleted");
-        }
-        if (flag.equals("-d")) {
-            File temp = root;
-            root = root.getParentFile();
-            deleteFolderHierarchy(temp, secondFlag);
-        }
-//        int sectorSize = 512; // размер сектора в байтах
-//        long sectorNumber = 0; // номер сектора
-//        long offset = sectorNumber * sectorSize; // смещение до нужного сектора
-//
-//        try (RandomAccessFile file = new RandomAccessFile(root, "rw")) {
-//            long fileSize = root.length();
-//            // переходим к нужному сектору
-//            file.seek(offset);
-//
-//            // читаем данные из сектора
-//            byte[] data = new byte[sectorSize];
-//            int bytesRead = file.read(data);
-//
-//            // выводим прочитанные данные
-//            System.out.println("Прочитано " + bytesRead + " байт:");
-//            for (byte b : data) {
-//                System.out.print(String.format("%02X ", b));
-//            }
-//            System.out.println();
-//
-//            // записываем новые данные в сектор
-//            byte[] newData = new byte[]{0x00, 0x00, 0x00, 0x00};
-//            for (int i = 0; i < fileSize; i++) {
-//                file.seek(i);
-//                file.write(0);
-//            }
-//
-//            // снова читаем данные из сектора, чтобы убедиться, что они изменились
-//            file.seek(offset);
-//            bytesRead = file.read(data);
-//
-//            // выводим измененные данные
-//            System.out.println("Прочитано " + bytesRead + " байт после записи:");
-//            for (byte b : data) {
-//                System.out.print(String.format("%02X ", b));
-//            }
-//            System.out.println();
-//        }
-    }
-
-    private void deleteFolderHierarchy(File folder, String flag) throws IOException {
-        //System.out.println(indent + "+-- " + folder.getName() + "/");
-
-        File[] files = folder.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    deleteFolderHierarchy(file, flag);
-                    if (flag.equals("-a")) {
-                        FileUtils.forceDelete(file);
-                    }
-                } else {
-                    FileUtils.forceDelete(file);
-                }
-            }
+        CleanerThread thread = new CleanerThread(root, flag, secondFlag);
+        thread.run();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
+
+
 
     private static void printFolderHierarchy(File folder, String indent, String flag) {
         if (!flag.equals("-f")) System.out.println(indent + "+-- " + folder.getName() + "/");
