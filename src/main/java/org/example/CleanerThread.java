@@ -10,7 +10,7 @@ public class CleanerThread implements Runnable {
     private File root;
     private String firstFlag;
     private String secondFlag;
-    private Semaphore semaphore = new Semaphore(1);
+    private Semaphore mutex = new Semaphore(1);
 
     public CleanerThread(File file, String flag1, String flag2) {
         this.firstFlag = flag1;
@@ -21,7 +21,7 @@ public class CleanerThread implements Runnable {
     @Override
     public void run() {
         try {
-            semaphore.acquire();
+            mutex.acquire();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -44,11 +44,9 @@ public class CleanerThread implements Runnable {
                 throw new RuntimeException(e);
             }
         }
-        semaphore.release();
+        mutex.release();
     }
     private void deleteFolderHierarchy(File folder, String flag) throws IOException {
-        //System.out.println(indent + "+-- " + folder.getName() + "/");
-
         File[] files = folder.listFiles();
         if (files != null) {
             for (File file : files) {

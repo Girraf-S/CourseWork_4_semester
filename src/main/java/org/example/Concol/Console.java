@@ -55,8 +55,10 @@ public class Console {
                 "choose   file_name/directory_name\n" +
                 "back     (return to parent directory)\n" +
                 "read     (-t read in .txt format, -b read binary code of symbols\n" +
+                "write    (-t write in .txt format, -b write in binary format\n" +
                 "clear    (first flags: -f reset the file, -d reset all files in directory,\n" +
                 "          second flag: -c delete file or directory)\n" +
-                "break     (close redactor)");
+                "break    (close redactor)\n" +
+                "create   (create new hierarchy)\n");
     }
 }

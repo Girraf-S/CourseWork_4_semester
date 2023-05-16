@@ -10,20 +10,22 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
+    static boolean isOk = false;
+    static String command;
+    static String[] commandArguments;
+    static Disk disk = new Disk();
+    static FileWork fileWork;
+    static Console console;
     public static void main(String[] args) {
-        boolean isOk = false;
-        String command;
-        String[] commandArguments;
-        File file;
+
         Scanner scanner = new Scanner(System.in);
         Console.menu();
         command = scanner.nextLine();
         commandArguments = command.split(" ");
-        file = new File("./laboratory");
-        FileWork fileWork = new FileWork(file);
+        fileWork= new FileWork(disk.getRoot());
         while (!commandArguments[0].equals("break")) {
             while (true) {
-                Console console = new Console(commandArguments);
+                console = new Console(commandArguments);
                 try {
                     commandArguments = console.checkCommand();
                     isOk = true;
